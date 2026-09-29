@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Daftar Kuliner Nusantara</title>
+<style>
+:root {
+--primary-color: #ff6b6b;
+--secondary-color: #4ecdc4;
+--dark-color: #2f3e46;
+--light-color: #f8f9fa;
+}
+* {
+box-sizing: border-box;
+margin: 0;
+padding: 0;
+font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+body {
+background-color: var(--light-color);
+color: var(--dark-color);
+padding-bottom: 50px;
+}
+header {
+background: linear-gradient(135deg, var(--primary-color), #ff8787);
+color: white;
+text-align: center;
+padding: 60px 20px;
+box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+header h1 {
+font-size: 2.5rem;
+margin-bottom: 10px;
+}
+header p {
+font-size: 1.1rem;
+opacity: 0.9;
+}
+.search-container {
+max-width: 60px;
+width: 90%;
+margin: -25px auto 40px auto;
+display: flex;
+justify-content: center;
+}
+#search-input {
+width: 100%;
+padding: 15px 25px;
+font-size: 1.1rem;
+border: none;
+border-radius: 30px;
+box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+outline: none;
+transition: all 0.3s ease;
+}
+#search-input:focus {
+box-shadow: 0 4px 25px rgba(255, 107, 107, 0.3);
+transform: scale(1.02);
+}
+.container {
+max-width: 1200px;
+margin: 0 auto;
+padding: 0 20px;
+}
+.food-grid {
+display: grid;
+grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+gap: 30px;
+}
+.food-card {
+background: white;
+border-radius: 15px;
+overflow: hidden;
+box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+transition: transform 0.3s ease, box-shadow 0.3s ease;
+display: flex;
+flex-direction: column;
+}
+.food-card:hover {
+transform: translateY(-5px);
+box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+}
+.food-image {
+width: 100%;
+height: 200px;
+background-color: #ddd;
+display: flex;
+align-items: center;
+justify-content: center;
+color: #888;
+font-weight: bold;
+background-size: cover;
+background-position: center;
+}
+.food-info {
+padding: 20px;
+flex-grow: 1;
+display: flex;
+flex-direction: column;
+}
+.food-category {
+font-size: 0.8rem;
+text-transform: uppercase;
+color: var(--secondary-color);
+font-weight: bold;
+margin-bottom: 5px;
+letter-spacing: 1px;
+}
+.food-title {
+font-size: 1.4rem;
+margin-bottom: 10px;
+color: var(--dark-color);
+}
+.food-description {
+font-size: 0.95rem;
+color: #6c757d;
+line-height: 1.5;
+margin-bottom: 15px;
+}
+.food-price {
+font-size: 1.2rem;
+font-weight: bold;
+color: var(--primary-color);
+margin-top: auto;
+}
+.no-results {
+text-align: center;
+grid-column: 1 / -1;
+padding: 40px;
+font-size: 1.2rem;
+color: #6c757d;
+display: none;
+}
+</style>
+</head>
+<body>
+<header>
+<h1>EatsList Kuningan</h1>
+<p>Temukan kuliner nusantara terfavorit pilihan kami</p>
+</header>
+<div class="search-container">
+<input type="text" id="search-input" placeholder="Cari makanan, rasa, atau daerah asal...">
+</div>
+<div class="container">
+<div class="food-grid" id="food-grid">
+<!-- Makanan akan dimuat otomatis oleh JavaScript di bawah -->
+</div>
+<div class="no-results" id="no-results">
+Makanan yang kamu cari tidak ditemukan 😢
+</div>
+</div>
+<script>
+// Data makanan mentah (Silakan tambah, ubah, atau hapus sesukamu!)
+const foodData = [
+{
+title: "Nasi Goreng Spesial",
+category: "Makanan Utama",
+description: "Nasi goreng khas Jawa dengan suwiran ayam kampung, telur mata sapi, kerupuk udang, dan acar segar.",
+price: "Rp 25.000",
+imagePlaceholder: "🍳 Nasi Goreng"
+},
+{
+title: "Sate Ayam Madura",
+category: "Makanan Utama",
+description: "10 tusuk sate daging ayam pilihan yang empuk dibalut bumbu kacang gurih melimpah dan kecap manis.",
+price: "Rp 28.000",
+imagePlaceholder: "🍢 Sate Ayam"
+},
+{
+title: "Rendang Daging Sapi",
+category: "Makanan Utama",
+description: "Daging sapi premium yang dimasak lambat dengan santan kental dan rempah-rempah autentik Minang.",
+price: "Rp 35.000",
+imagePlaceholder: "🥩 Rendang"
+},
+{
+title: "Es Cendol Durian",
+category: "Minuman",
+description: "Minuman segar dengan cendol pandan asli, santan gurih, gula merah cair, dan topping buah durian medan.",
+price: "Rp 18.000",
+imagePlaceholder: "🥤 Es Cendol"
+},
+{
+title: "Gado-Gado Betawi",
+category: "Makanan Utama",
+description: "Sayuran rebus segar, tahu, tempe, dan telur disiram bumbu kacang ulek khas Betawi dan kerupuk.",
+price: "Rp 20.000",
+imagePlaceholder: "🥗 Gado-Gado"
+},
+{
+title: "Pisang Goreng Keju",
+category: "Cemilan",
+description: "Pisang raja yang digoreng krispi dengan balutan adonan renyah, diberi topping parutan keju dan susu kental manis.",
+price: "Rp 15.000",
+imagePlaceholder: "🍌 Pisang Goreng"
+}
+];
+const foodGrid = document.getElementById('food-grid');
+const searchInput = document.getElementById('search-input');
+const noResults = document.getElementById('no-results');
+// Fungsi untuk merender daftar makanan ke layar
+function displayFoods(foods) {
+foodGrid.innerHTML = '';
+if (foods.length === 0) {
+noResults.style.display = 'block';
+return;
+}
+noResults.style.display = 'none';
+foods.forEach(food => {
+const card = document.createElement('div');
+card.className = 'food-card';
+card.innerHTML = &lt;div class="food-image"&gt;${food.imagePlaceholder}&lt;/div&gt; &lt;div class="food-info"&gt; &lt;span class="food-category"&gt;${food.category}&lt;/span&gt; &lt;h3 class="food-title"&gt;${food.title}&lt;/h3&gt; &lt;p class="food-description"&gt;${food.description}&lt;/p&gt; &lt;div class="food-price"&gt;${food.price}&lt;/div&gt; &lt;/div&gt;;
+foodGrid.appendChild(card);
+});
+}
+// Jalankan pencarian live search secara realtime
+searchInput.addEventListener('input', (e) => {
+const keyword = e.target.value.toLowerCase();
+const filteredFoods = foodData.filter(food => {
+return food.title.toLowerCase().includes(keyword) ||
+food.description.toLowerCase().includes(keyword) ||
+food.category.toLowerCase().includes(keyword);
+});
+displayFoods(filteredFoods);
+});
+// Load pertama kali
+displayFoods(foodData);
+{
+    title: "Bakso Granat",
+    category: "Makanan Utama",
+    description: "Bakso urat jumbo dengan isian sambal cabai rawit melimpah yang menggugah selera.",
+    price: "Rp 22.000",
+    imagePlaceholder: "🥣 Bakso"
+}
+
+</script>
+</body>
+</html>
